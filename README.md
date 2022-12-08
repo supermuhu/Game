@@ -2,20 +2,6 @@
 #include<bits/stdc++.h>
 #include<conio.h>
 using namespace std;
-long long score = 0;
-typedef struct{
-	int x,y;
-}point;
-int gift = 0;
-void Setwindowsize(SHORT width, SHORT height){
-   HANDLE hStdout=GetStdHandle(STD_OUTPUT_HANDLE);
-   SMALL_RECT Windowsize;
-   Windowsize. Top=0;
-   Windowsize. Left=0;
-   Windowsize. Right=width;
-   Windowsize.Bottom=height;
-   SetConsoleWindowInfo(hStdout, 1, &Windowsize);
-}
 void GoTo_xy(SHORT posX, SHORT posY)
 {
 	HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -49,240 +35,72 @@ void SetColor(int backgound_color, int text_color){
 //15 = Bright White
 //
 }
-void printWord(int x,int y,string c,int a,int b){
-	GoTo_xy(x,y);
-	SetColor(a,b);
-	cout << c << endl;
-	SetColor(0,7);
+void setwheel(int a[7][11]){
+	a[0][5] = 2; a[6][5] = 2; a[3][1] = 2; a[3][9] = 2;
+	a[1][2] = 2; a[1][8] = 2; a[5][2] = 2; a[5][8] = 2;
+	a[2][1] = 2; a[4][1] = 2; a[4][9] = 2; a[2][9] = 2;
+	a[0][4] = 2; a[0][6] = 2; a[6][4] = 2; a[6][6] = 2;
+	a[0][3] = 2; a[0][7] = 2; a[6][3] = 2; a[6][7] = 2;
 }
-void Title(){
-	printf("%80s\n"," [[[[|]]]]     [|]       ||]         [|]         [|]    [|]   [|][||||]");
-	SetColor(0,1); //color
-	printf("%80s\n","[[[     ]]]    [||[]     ||]        [|||]        [||  [|]     [||      ");
-	SetColor(0,2); //color
-	printf("%80s\n","     [[]]    [|| []    ||]       [|| ||]       [||[|]       [||      ");
-	SetColor(0,3); //color
-	printf("%80s\n"," [[|]]      [||  []   ||]      [|||||||]      [||[|]       [||[||||]");
-	SetColor(0,4); //color
-	printf("%80s\n","[[]]        [||   []  ||]     [||     ||]     [||[|]       [||      ");
-	SetColor(0,5); //color
-	printf("%80s\n","[[[     ]]]    [||     []||]    [||       ||]    [||  [|]     [||      ");
-	SetColor(0,6); //color
-	printf("%80s\n"," [[[[|]]]]     [||       [|]   [|]         [|]   [|]    [|]   [|][||||]");
-	SetColor(0,7);
-}
-void inmatrix(int a[25][50],point head){
-	SetColor(15,0);
-	for(int i = 0 ; i < 25 ; i++){
-		GoTo_xy(20,12+i);
-		for(int j = 0 ; j < 50 ; j++){
-			if(i == head.x && j == head.y){ // head
-				SetColor(10,15);
-				cout << ":";
-				SetColor(15,0);
-				continue;
-			}
-			switch(a[i][j]){
-				case 0: // field
-					cout << " ";
-					break;
-				case 2: // section
-					SetColor(10,15);
-					cout << " ";
-					SetColor(15,0);
-					break;
-				case 3: // food
-					SetColor(3,15);
-					cout << " ";
-					SetColor(15,0);
-					break;
-				case 4: // gift
-					SetColor(12,15);
-					cout << " ";
-					SetColor(15,0);
-					break;
-			}
+void inmatran(int a[7][11],int site){
+	
+	for(int i = 0 ; i < 7 ; i++){
+		//GoTo_xy(site,i);
+		GoTo_xy(0,i);
+		for(int j = 0 ; j < 11 ; j++){
+			if(a[i][j] == 2) cout << "o";
+			else cout << " ";
 		}
-	}
-	SetColor(12,0);
-	GoTo_xy(60,38);
-	cout << "Point: ";
-	cout << "   " <<score<< "   " << endl;
-	SetColor(0,7);
-}
-void TestLose(){
-	printWord(38,40,"  Thua cmm roi  ",4,0);
-	printWord(35,41," Enter to play again ",7,1);
-}
-void random(int a[25][50]){
-	srand(time(NULL));
-	if(gift == 5){
-		int k = rand() % (23 - 0 + 1) + 0,l = rand() % (48 - 0 + 1) + 0;
-		while(1<2){
-			if(a[k][l] == 0){
-				if(a[k+1][l] != 2 && a[k][l+1] != 2 && a[k+1][l+1] != 2){
-					a[k][l] = 4; a[k+1][l] = 4; a[k][l+1] = 4; a[k+1][l+1] = 4; gift = 0; break;
-				}else{
-					k = rand() % (23 - 0 + 1) + 0, l = rand() % (48 - 0 + 1) + 0;
-				}
-			}else{
-				k = rand() % (23 - 0 + 1) + 0,l = rand() % (48 - 0 + 1) + 0;
-			}
-		}
-	}else{
-		int k = rand() % (24 - 0 + 1) + 0,l = rand() % (49 - 0 + 1) + 0;
-		while(1<2){
-			if(a[k][l] == 0){
-				a[k][l] = 3; gift++; break;
-			}else{
-				k = rand() % (24 - 0 + 1) + 0, l = rand() % (49 - 0 + 1) + 0;
-			}
-		}
+		cout << endl;
 	}
 }
-void runtail(point &tail,int a[25][50],int b[25][50]){
-	a[tail.x][tail.y] = 0;
-	switch(b[tail.x][tail.y]){
-		case 2: // right
-			b[tail.x][tail.y] = 0;
-			if(tail.y == 49) tail.y = -1;
-			tail.y += 1;
+void spin(int a[7][11],int count){
+	for(int i = 0 ; i < 7 ; i ++){
+		for(int j = 0 ; j < 11 ; j++){
+			a[i][j] = 1;
+		}
+	}
+	setwheel(a);
+	switch(count){
+		case 1:
+			a[2][2]=2;a[2][3]=2;a[3][4]=2;a[3][6]=2;a[4][7]=2;a[4][8]=2;
+			a[1][6]=2;a[2][6]=2;a[4][4]=2;a[5][4]=2;
 			break;
-		case 3: // left
-			b[tail.x][tail.y] = 0;
-			if(tail.y == 0) tail.y = 50;
-			tail.y -= 1;
+		case 2:
+			a[2][3]=2;a[3][4]=2;a[3][6]=2;a[4][7]=2;
+			a[2][6]=2;a[1][7]=2;a[4][4]=2;a[5][3]=2;      
+			break;                                                                                                                                                                                                                                                                                              
+		case 3:
+			a[1][3]=2;a[2][4]=2;a[4][6]=2;a[5][7]=2;
+			a[2][7]=2;a[3][6]=2;a[4][4]=2;a[4][3]=2;
 			break;
-		case 4: // up
-			b[tail.x][tail.y] = 0;
-			if(tail.x == 0) tail.x = 25;
-			tail.x -= 1;
+		case 4:
+			a[1][4]=2;a[2][4]=2;a[4][6]=2;a[5][7];
+			a[2][8]=2;a[2][7]=2;a[3][6]=2;a[3][4]=2;a[4][3]=2;a[4][2]=2;
 			break;
-		case 5: // down
-			b[tail.x][tail.y] = 0;
-			if(tail.x == 24) tail.x = -1;
-			tail.x += 1;
+		case 5:
+			for(int i = 1 ; i < 7-1 ; i += 2){
+				a[i][5] = 2;
+			}
+			for(int i = 2 ; i < 11-1 ; i += 2){
+				a[3][i] = 2;
+			}
 			break;
 	}
 }
-bool eat(int a[25][50],point &head,bool &count){
-	switch(a[head.x][head.y]){
-		case 2: // section
-			count = false;
-			return false;
-		case 3: // food
-			a[head.x][head.y] = 2;
-			random(a);
-			score += 1;
-			return false;
-		case 4: // gift
-			if(a[head.x][head.y-1] == 4) a[head.x][head.y-1] = 0;
-			if(a[head.x-1][head.y] == 4) a[head.x-1][head.y] = 0;
-			if(a[head.x-1][head.y-1] == 4) a[head.x-1][head.y-1] = 0;
-			if(a[head.x][head.y+1] == 4) a[head.x][head.y+1] = 0;
-			if(a[head.x-1][head.y+1] == 4) a[head.x-1][head.y+1] = 0;
-			if(a[head.x+1][head.y+1] == 4) a[head.x+1][head.y+1] = 0;
-			if(a[head.x+1][head.y] == 4) a[head.x+1][head.y] = 0;
-			if(a[head.x+1][head.y-1] == 4) a[head.x+1][head.y-1] = 0;
-			a[head.x][head.y] = 2;
-			random(a);
-			score += 3;
-			return false;
-		default: // continually go
-			a[head.x][head.y] = 2;
-			return true;
-	}
-}
-void right(int a[25][50],int b[25][50],bool &count,point &head,point &tail){
-	b[head.x][head.y] = 2;
-	if(head.y == 49) head.y = -1;
-	head.y+=1;
-	b[head.x][head.y] = 2;
-	if(eat(a,head,count)) runtail(tail,a,b);
-}
-void left(int a[25][50],int b[25][50],bool &count,point &head,point &tail){
-	b[head.x][head.y] = 3;
-	if(head.y == 0) head.y = 50;
-	head.y -= 1;
-	b[head.x][head.y] = 3;
-	if(eat(a,head,count)) runtail(tail,a,b);
-}
-void up(int a[25][50],int b[25][50],bool &count,point &head,point &tail){
-	b[head.x][head.y] = 4;
-	if(head.x == 0) head.x = 25;
-	head.x -= 1;
-	b[head.x][head.y] = 4;
-	if(eat(a,head,count)) runtail(tail,a,b);
-}
-void down(int a[25][50],int b[25][50],bool &count,point &head,point &tail){
-	b[head.x][head.y] = 5;
-	if(head.x == 24) head.x = -1;
-	head.x += 1;
-	b[head.x][head.y] = 5;
-	if(eat(a,head,count)) runtail(tail,a,b);
-}
-void game(){
-	Title();
-	int n;
-	GoTo_xy(35,20);
-	cout << "Nhap toc do: "; cin >> n;
-	bool count = true;
-	int a[25][50] = {0};
-	int b[25][50] = {0};
-	a[0][0] = 2;
-	point head,tail;
-	head.x = 0; head.y = 0;
-	tail.x = 0; tail.y = 0;
-	random(a);
-	inmatrix(a,head);
-	char c,d;
-	for(;;){
-		if(!count){
-			TestLose();
-			char c = getch();
-			if(c == -32) c = getch();
-			if(c == 13){
-				system("cls");
-				game();
-			}
-			else return;
-		}
-		if(kbhit()){
-			c = getch();
-			if(c == -32) c = getch();
-			if(d == 72 && c == 80) c = 72;
-			else if(d == 80 && c == 72) c = 80;
-			else if(d == 75 && c == 77) c = 75;
-			else if(d == 77 && c == 75) c = 77;
-			d = c;
-		}
-		switch(c){
-			case 72:
-				up(a,b,count,head,tail);
-				inmatrix(a,head);
-				Sleep(n);
-				break;
-			case 80:
-				down(a,b,count,head,tail);
-				inmatrix(a,head);
-				Sleep(n);
-				break;
-			case 75:
-				left(a,b,count,head,tail);
-				inmatrix(a,head);
-				Sleep(n);
-				break;
-			case 77:
-				right(a,b,count,head,tail);
-				inmatrix(a,head);
-				Sleep(n);
-				break;
-		}
+void wheel(){
+	int n=7,m=11;
+	int a[7][11];
+	setwheel(a);
+	inmatran(a,0);
+	for(int count = 1,site = 1,site2 = 20;;count++,site++,site2++){
+		spin(a,count);
+		inmatran(a,site);
+		if(count == 5) count = 0;
+		Sleep(100);
 	}
 }
 int main(){
-	Setwindowsize(90,45);
-	game();
-	system("pause");
+	wheel();
 	return 0;
 }
